@@ -1,0 +1,34 @@
+# CODEOWNERS — PR 시 자동 리뷰어 지정
+# 사용법: @username 또는 @org/team-name 으로 교체
+# 문서: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# 기본 (PM / Docs)
+*                       @toryhyeon80
+
+# Data Engineer
+/data/                  @toryhyeon80
+/split_data.py          @toryhyeon80
+/split_stats.py         @toryhyeon80
+/eda.py                 @toryhyeon80
+/notebooks/01_eda_colab.ipynb @toryhyeon80
+
+# AI Engineer
+/configs/               @toryhyeon80
+/train.py               @toryhyeon80
+/val.py                 @toryhyeon80
+/predict.py             @toryhyeon80
+/runs/                  @toryhyeon80
+/notebooks/02_train_colab.ipynb @toryhyeon80
+
+# Service / Demo
+/backend/               @toryhyeon80
+/app.py                 @toryhyeon80
+/configs/api.yaml        @toryhyeon80
+/notebooks/03_api_demo_colab.ipynb @toryhyeon80
+
+# Docs / Report
+/report.md              @toryhyeon80
+/update_report.py       @toryhyeon80
+/update_notion.py       @toryhyeon80
+/PRESENTATION.md        @toryhyeon80
+/docs/                  @toryhyeon80

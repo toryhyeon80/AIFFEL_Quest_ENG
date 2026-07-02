@@ -1,0 +1,43 @@
+# Colab GPU 학습 설정 (CUDA)
+# 실행: python3 train.py --config configs/train_colab.yaml --no-report
+#
+# Colab 노트북: notebooks/02_train_colab.ipynb
+# device: 0 = Colab T4/A100 (Mac mps 와 다름)
+
+model: yolo11s.pt
+device: 0
+
+hyperparameters:
+  epochs: 50
+  batch: 16         # Colab T4 16GB — OOM 시 8→4 fallback
+  imgsz: 640
+  patience: 10
+  workers: 2
+  project: runs/detect
+  name: train_colab
+  seed: 42
+  pretrained: true
+  optimizer: auto
+  cos_lr: true
+  warmup_epochs: 3
+  close_mosaic: 10
+  exist_ok: true
+
+# train.yaml 과 동일 증강 (도메인 규칙 유지)
+augmentation:
+  flipud: 0.0
+  fliplr: 0.5
+  hsv_h: 0.02
+  hsv_s: 0.6
+  hsv_v: 0.5
+  degrees: 5.0
+  translate: 0.1
+  scale: 0.4
+  shear: 0.0
+  perspective: 0.0
+  mosaic: 1.0
+  mixup: 0.1
+  copy_paste: 0.0
+  erasing: 0.2
+
+oom_fallback_batches: [16, 8, 4]

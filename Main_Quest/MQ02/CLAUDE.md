@@ -54,6 +54,10 @@ wind-turbine-yolo/
 ├── backend/               # Phase 2 FastAPI (`POST /api/v1/predict`)
 ├── update_report.py       # report.md 자동 갱신
 ├── update_notion.py       # Notion 페이지 동기화 + 이미지 업로드
+├── docs/                  # 팀 OS: ROLES · WORKFLOW · SUBMISSION
+├── template/              # 다음 프로젝트 템플릿 가이드
+├── notebooks/             # Colab (01_eda · 02_train · 03_api)
+├── .github/               # CODEOWNERS · PR template
 ├── report.md              # 해커톤 루브릭 리포트 (자동 마커 포함)
 ├── PRESENTATION.md        # 15분 발표 PPT 초안 (평가항목 8가지 매핑)
 ├── TRAINING_CHECKLIST.md  # 학습 준비·추가 개발 체크리스트
@@ -101,7 +105,10 @@ python3 train.py --test           # 1 Epoch 파이프라인 스모크 테스트
 # 4. Baseline (비교군)
 python3 train.py --config configs/train_baseline.yaml --no-report
 
-# 4b. EXP1 (Small + min aug ablation, 20ep)
+# 4b. Colab (GPU) — notebooks/02_train_colab.ipynb
+python3 train.py --config configs/train_colab.yaml --no-report
+
+# 4c. EXP1 (Small + min aug ablation, 20ep)
 python3 train.py --config configs/train_exp1_small_minaug.yaml --no-report
 
 # 5. Val 재검증
@@ -263,6 +270,9 @@ NOTION_PAGE_ID=38fb8ed24414801e9db4c45637297082
 | `references.md` | OSS 스택 · Phase 매핑 |
 | `report.md` | 해커톤 루브릭 리포트 |
 | `PRESENTATION.md` | 15분 발표 PPT 초안 |
+| `docs/ROLES.md` | 팀 역할 (Data / AI / Service) |
+| `docs/WORKFLOW.md` | Git · Colab · API 워크플로 |
+| `template/README.md` | 새 프로젝트 템플릿 |
 | `TRAINING_CHECKLIST.md` | 학습 준비·추가 개발 체크리스트 |
 | `DESIGN.md` | LogPick UI/UX 가이드 (Phase 3) |
 | `.cursorrules` | YOLO + M1 mps 규칙 |
