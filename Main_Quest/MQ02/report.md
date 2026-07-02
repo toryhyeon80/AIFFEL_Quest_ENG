@@ -247,7 +247,7 @@
 ![predict 추론 결과 2 — DJI_0374_02_07.png (16 BBox)](report/assets/predict/DJI_0374_02_07.jpg)
 ![predict 추론 결과 3 — DJI_0033_03_04.png (15 BBox)](report/assets/predict/DJI_0033_03_04.jpg)
 
-- **전체 결과:** `runs/predict/val_batch/predictions.json` · `runs/predict/val_batch/`
+- **전체 결과:** `runs/predict/val_batch/predictions.json` · GitHub: `report/assets/predict/predictions.json` · `runs/predict/val_batch/`
 <!-- /report:auto:predict-inference -->
 
 ### 탐지 결과 시각화 (val.py 검증)
