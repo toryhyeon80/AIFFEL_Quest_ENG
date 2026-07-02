@@ -1,0 +1,19 @@
+source: folder_scan
+updated_at: '2026-07-02 06:19:02'
+data_dir: data
+train_ratio: 0.8
+val_ratio: 0.2
+seed: null
+orphan_labels: null
+train:
+  total: 10776
+  labeled: 2401
+  background: 8375
+val:
+  total: 2694
+  labeled: 594
+  background: 2100
+total:
+  images: 13470
+  labeled: 2995
+  background: 10475

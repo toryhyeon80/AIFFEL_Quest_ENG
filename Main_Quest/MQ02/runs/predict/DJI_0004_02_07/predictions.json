@@ -1,0 +1,17 @@
+{
+  "weights": "runs/detect/train/weights/best.pt",
+  "source": "data/images/val/DJI_0004_02_07.png",
+  "device": "mps",
+  "conf": 0.25,
+  "iou": 0.7,
+  "predicted_at": "2026-07-02 06:48:23",
+  "results": [
+    {
+      "source": "DJI_0004_02_07.png",
+      "image_width": 586,
+      "image_height": 371,
+      "detection_count": 0,
+      "detections": []
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# FastAPI 백엔드 설정 (Phase 2)
+# backend/main.py가 이 파일을 읽습니다.
+
+weights: runs/detect/train/weights/best.pt
+device: mps
+
+predict:
+  conf: 0.25
+  iou: 0.7
+  imgsz: 640
+
+server:
+  host: 0.0.0.0
+  port: 8000
+
+# Phase 3 Next.js 로컬 개발용 CORS
+cors_origins:
+  - http://localhost:3000
+  - http://127.0.0.1:3000

@@ -1,0 +1,27 @@
+total_bboxes: 9351
+total_label_files_with_bbox: 2995
+by_split:
+  train: 7505
+  val: 1846
+by_class:
+  Dirt (0):
+    count: 581
+    ratio_pct: 6.21
+    small_bbox_count: 33
+    small_bbox_ratio_pct: 5.68
+    mean_area: 0.302186
+    median_width: 0.435154
+    median_height: 0.609164
+  Damage (1):
+    count: 8770
+    ratio_pct: 93.79
+    small_bbox_count: 8186
+    small_bbox_ratio_pct: 93.34
+    mean_area: 0.007018
+    median_width: 0.030717
+    median_height: 0.051213
+small_bbox_threshold: 0.2
+insights:
+- '클래스 불균형: Damage (1) 8770개 vs Dirt (0) 581개 (약 15.1배).'
+- Damage (1) BBox의 93.3%가 width·height 모두 0.2 미만(극소형 객체).
+- Damage 클래스가 이미지 대비 매우 작은 BBox로 밀집 → imgsz 1024 이상 상향 또는 소형 객체 탐지 증강 검토 권장.

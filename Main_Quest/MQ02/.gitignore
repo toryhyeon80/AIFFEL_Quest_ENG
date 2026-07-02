@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+# runs/ — 과제 제출용 학습·검증·추론 산출물 추적
+data/*
+!data/data.yaml
+*.pt
+!runs/**/*.pt
+node_modules/
+.DS_Store
+python.zip
+*.zip

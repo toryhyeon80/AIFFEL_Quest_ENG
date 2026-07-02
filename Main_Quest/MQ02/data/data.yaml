@@ -1,0 +1,10 @@
+# YOLO 데이터셋 설정 (하드코딩 금지 — train.py에서 이 파일을 참조)
+# path는 프로젝트 루트 기준 데이터셋 루트 디렉터리
+path: data
+train: images/train
+val: images/val
+
+nc: 2
+names:
+  0: dirt
+  1: damage

@@ -1,0 +1,46 @@
+# EXP1 — YOLO11s + 최소 증강 (Baseline과 동일 aug, 20 epoch)
+# 목적: 모델 스케일(Small) 효과 — Baseline(YOLO11n)과 epoch·증강 조건 맞춤 비교
+#
+# 실행 (밤새):
+#   cd ~/wind-turbine-yolo
+#   nohup python3 train.py --config configs/train_exp1_small_minaug.yaml --no-report > exp1_train.log 2>&1 &
+#
+# 산출물: runs/detect/exp1_small_minaug/
+
+model: yolo11s.pt
+device: mps
+
+hyperparameters:
+  epochs: 20
+  batch: 8
+  imgsz: 640
+  patience: 10
+  workers: 0
+  project: runs/detect
+  name: exp1_small_minaug
+  seed: 42
+  pretrained: true
+  optimizer: auto
+  cos_lr: true
+  warmup_epochs: 3
+  close_mosaic: 10
+  exist_ok: true
+
+# train_baseline.yaml 과 동일 — 증강 최소 (EXP1: Small만 변경)
+augmentation:
+  flipud: 0.0
+  fliplr: 0.5
+  hsv_h: 0.015
+  hsv_s: 0.4
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.3
+  shear: 0.0
+  perspective: 0.0
+  mosaic: 0.5
+  mixup: 0.0
+  copy_paste: 0.0
+  erasing: 0.0
+
+oom_fallback_batches: [8, 4, 2]

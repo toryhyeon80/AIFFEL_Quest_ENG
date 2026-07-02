@@ -1,0 +1,18 @@
+# YOLO11 검증(Validation) 설정
+# val.py가 이 파일을 읽어 best.pt로 val 세트 재평가를 실행합니다.
+
+weights: runs/detect/train/weights/best.pt
+device: mps
+
+parameters:
+  batch: 8
+  imgsz: 640
+  workers: 0
+  split: val
+  project: runs/detect
+  name: val_final
+  exist_ok: true
+  save_json: false
+  plots: true
+
+oom_fallback_batches: [8, 4, 2]

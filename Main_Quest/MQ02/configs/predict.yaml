@@ -1,0 +1,19 @@
+# YOLO11 추론 설정 (Phase 1 Test)
+# predict.py가 이 파일을 읽어 단일/다중 이미지·영상 추론을 실행합니다.
+
+weights: runs/detect/train/weights/best.pt
+device: mps
+
+parameters:
+  conf: 0.25
+  iou: 0.7
+  imgsz: 640
+  save: true          # BBox 오버레이 이미지 저장
+  save_txt: false
+  project: runs/predict
+  name: predict
+  exist_ok: true
+
+output:
+  save_json: true
+  json_filename: predictions.json
