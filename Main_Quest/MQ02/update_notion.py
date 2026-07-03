@@ -1,9 +1,9 @@
 """
-report.md와 YOLO 학습·EDA 결과를 읽어 Notion 페이지를 자동 업데이트합니다.
+README.md와 YOLO 학습·EDA 결과를 읽어 Notion 페이지를 자동 업데이트합니다.
 
 파이프라인 (기본):
   1. eda.py (runs/eda 없을 때 자동 실행)
-  2. update_report.py (report.md에 EDA·학습 결과 반영)
+  2. update_report.py (README.md에 EDA·학습 결과 반영)
   3. Notion 페이지 전체 교체 + 로컬 이미지 업로드 (EDA·학습 그래프 포함)
 
 환경 변수:
@@ -55,12 +55,12 @@ class YoloMetrics:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="report.md 내용을 Notion 페이지에 반영합니다.")
+    parser = argparse.ArgumentParser(description="README.md 내용을 Notion 페이지에 반영합니다.")
     parser.add_argument(
         "--report",
         type=Path,
-        default=Path("report.md"),
-        help="업로드할 마크다운 리포트 경로 (기본: report.md)",
+        default=Path("README.md"),
+        help="업로드할 마크다운 리포트 경로 (기본: README.md)",
     )
     parser.add_argument(
         "--runs-dir",
@@ -87,7 +87,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-report-sync",
         action="store_true",
-        help="update_report.py 동기화 건너뛰기 (report.md 원문만 업로드)",
+        help="update_report.py 동기화 건너뛰기 (README.md 원문만 업로드)",
     )
     return parser.parse_args()
 
@@ -159,7 +159,7 @@ def load_yolo_metrics(results_csv: Path) -> YoloMetrics:
 
 
 def enrich_report_with_metrics(content: str, metrics: YoloMetrics) -> str:
-    """report.md의 최종 모델 행 mAP 수치를 YOLO 학습 결과로 갱신합니다."""
+    """README.md의 최종 모델 행 mAP 수치를 YOLO 학습 결과로 갱신합니다."""
     map50_text = f"{metrics.map50:.3f}"
     map50_95_text = f"{metrics.map50_95:.3f}"
 
@@ -188,7 +188,7 @@ def strip_html_comments(content: str) -> str:
 
 def strip_leading_document_title(content: str) -> str:
     """
-    report.md 첫 줄 H1(# 제목)과 바로 뒤 구분선(---)을 제거합니다.
+    README.md 첫 줄 H1(# 제목)과 바로 뒤 구분선(---)을 제거합니다.
     Notion 페이지 title property와 본문 heading_1 중복을 방지합니다.
     """
     lines = content.splitlines()
@@ -388,7 +388,7 @@ def _nest_bullet_blocks(items: list[tuple[int, str]]) -> list[dict]:
     """
     (들여쓰기 수준, 텍스트) 목록을 Notion 중첩 bulleted_list_item 블록으로 변환합니다.
 
-    report.md 예:
+    README.md 예:
       - EXP 1: ...
         - **내용:** ...
         - **결과:** ...
@@ -574,8 +574,8 @@ def run_eda_if_needed() -> None:
 
 
 def sync_report_md() -> None:
-    """report.md에 학습·EDA 결과를 반영합니다 (update_report.py 호출)."""
-    print("report.md 동기화 중 (update_report.py)...")
+    """README.md에 학습·EDA 결과를 반영합니다 (update_report.py 호출)."""
+    print("README.md 동기화 중 (update_report.py)...")
     result = subprocess.run(
         [sys.executable, str(ROOT / "update_report.py")],
         cwd=ROOT,
@@ -583,7 +583,7 @@ def sync_report_md() -> None:
     )
     if result.returncode != 0:
         print(
-            "[경고] update_report.py 실패 — report.md 원문만 Notion에 업로드합니다.",
+            "[경고] update_report.py 실패 — README.md 원문만 Notion에 업로드합니다.",
             file=sys.stderr,
         )
 
@@ -630,7 +630,7 @@ def main() -> None:
     updated_at = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
     header = (
         f"> 마지막 자동 업데이트: {updated_at}"
-        + (f" | YOLO run: `{metrics.model_name}`" if metrics else " | YOLO 결과 없음 (report.md만 반영)")
+        + (f" | YOLO run: `{metrics.model_name}`" if metrics else " | YOLO 결과 없음 (README.md만 반영)")
         + "\n\n"
     )
     blocks = markdown_to_notion_blocks(header + content)
@@ -643,7 +643,7 @@ def main() -> None:
             f"mAP50-95={metrics.map50_95:.3f} (epoch {metrics.epoch})"
         )
     else:
-        print("YOLO results.csv를 찾지 못했습니다. report.md 원문만 업로드합니다.")
+        print("YOLO results.csv를 찾지 못했습니다. README.md 원문만 업로드합니다.")
 
     if args.dry_run:
         pending = sum(1 for b in blocks if "_pending_image" in b)

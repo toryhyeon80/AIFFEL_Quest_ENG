@@ -24,7 +24,7 @@
 - **목표:** `split_data.py`로 데이터를 나누고, `train.py`로 YOLO 모델 학습.
 - **제약:** Mac 16GB 램을 고려하여 모델은 `yolo11s.pt` (Small 버전)만 사용.
 - **증강(Augmentation):** `flipud=0.0`(상하 반전 금지) 등 도메인 지식 필수 적용.
-- **상태:** Baseline YOLO11n → 최종 YOLO11s (Val mAP50 **0.574**), `predict.py` Val 추론·`report.md`·Notion 자동화 완료.
+- **상태:** Baseline YOLO11n → 최종 YOLO11s (Val mAP50 **0.574**), `predict.py` Val 추론·`README.md`·Notion 자동화 완료.
 
 ### Phase 2: 백엔드 API 서버 (`backend/`) — MVP ✅
 

@@ -180,7 +180,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="학습 후 report.md 자동 갱신 건너뛰기 (baseline 학습 시 사용)",
+        help="학습 후 README.md 자동 갱신 건너뛰기 (baseline 학습 시 사용)",
     )
     return parser.parse_args()
 
@@ -196,7 +196,7 @@ def main() -> None:
       2. train kwargs 조립
       3. 테스트/epoch 오버라이드 적용
       4. YOLO 모델 로드 → OOM fallback 학습
-      5. (선택) update_report.py로 report.md 자동 갱신
+      5. (선택) update_report.py로 README.md 자동 갱신
     """
     args = parse_args()
     train_cfg = load_yaml(args.config.resolve())
@@ -228,7 +228,7 @@ def main() -> None:
 
     # Baseline(--no-report)이나 테스트(--test) 모드에서는 리포트 갱신 생략
     if not args.test and not args.no_report:
-        print("report.md 자동 갱신을 시도합니다...")
+        print("README.md 자동 갱신을 시도합니다...")
         subprocess.run([sys.executable, str(ROOT / "update_report.py")], check=False)
 
 

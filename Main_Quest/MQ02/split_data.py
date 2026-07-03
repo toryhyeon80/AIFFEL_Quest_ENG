@@ -17,7 +17,7 @@ split_data.py — 데이터 전처리: Train / Val 분할 스크립트
 [출력]
   data/images/train,  data/images/val
   data/labels/train,  data/labels/val
-  runs/split_summary.yaml  ← report.md 분할 표 자동 갱신용
+  runs/split_summary.yaml  ← README.md 분할 표 자동 갱신용
 
 [핵심 규칙]
   - 이미지·라벨은 파일명 stem(확장자 제외) 기준 1:1 매칭
@@ -93,7 +93,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="분할 후 report.md 자동 갱신 건너뛰기",
+        help="분할 후 README.md 자동 갱신 건너뛰기",
     )
     return parser.parse_args()
 
@@ -266,7 +266,7 @@ def main() -> None:
     print(f"\n분할 요약 저장: {summary_path.relative_to(ROOT)}")
 
     if not args.no_report:
-        print("report.md 자동 갱신을 시도합니다 (update_report.py)...")
+        print("README.md 자동 갱신을 시도합니다 (update_report.py)...")
         subprocess.run(
             [sys.executable, str(ROOT / "update_report.py")],
             cwd=ROOT,

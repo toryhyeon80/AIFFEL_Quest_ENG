@@ -286,7 +286,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="검증 후 report.md 자동 갱신 건너뛰기",
+        help="검증 후 README.md 자동 갱신 건너뛰기",
     )
     return parser.parse_args()
 
@@ -301,7 +301,7 @@ def main() -> None:
       1. YAML·가중치·데이터 경로 검증
       2. best.pt 로드 → val() 실행 (OOM fallback)
       3. val_metrics.yaml + results.csv 저장
-      4. (선택) update_report.py로 report.md 갱신
+      4. (선택) update_report.py로 README.md 갱신
     """
     args = parse_args()
     val_cfg = load_yaml(args.config.resolve())
@@ -335,7 +335,7 @@ def main() -> None:
     print(f"mAP50={results.box.map50:.3f}, mAP50-95={results.box.map:.3f}")
 
     if not args.no_report and output_dir.exists():
-        print("report.md 자동 갱신을 시도합니다...")
+        print("README.md 자동 갱신을 시도합니다...")
         subprocess.run(
             [sys.executable, str(ROOT / "update_report.py")],
             check=False,

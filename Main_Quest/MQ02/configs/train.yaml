@@ -19,7 +19,7 @@ hyperparameters:
   warmup_epochs: 3
   close_mosaic: 10
 
-# 팀 도메인 분석 기반 데이터 증강 (references.md · report.md EXP 2/3)
+# 팀 도메인 분석 기반 데이터 증강 (references.md · README.md EXP 2/3)
 augmentation:
   # 풍력 터빈: 중력·블레이드 방향상 상하 반전 절대 금지
   flipud: 0.0

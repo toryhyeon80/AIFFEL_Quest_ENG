@@ -1,5 +1,5 @@
 """
-runs/detect/ 학습·검증 결과와 data/ 분할 통계를 스캔하여 report.md를 자동 갱신합니다.
+runs/detect/ 학습·검증 결과와 data/ 분할 통계를 스캔하여 README.md를 자동 갱신합니다.
 
 갱신 항목:
   - 섹션 1: Train/Val 분할 표 (runs/split_summary.yaml 또는 data/ 폴더 집계)
@@ -27,7 +27,7 @@ import yaml
 from split_stats import DEFAULT_SPLIT_SUMMARY, load_split_summary
 
 ROOT = Path(__file__).resolve().parent
-DEFAULT_REPORT = ROOT / "report.md"
+DEFAULT_REPORT = ROOT / "README.md"
 DEFAULT_RUNS_DIR = ROOT / "runs" / "detect"
 DEFAULT_DATA_DIR = ROOT / "data"
 DEFAULT_TRAIN_CONFIG = ROOT / "configs" / "train.yaml"
@@ -84,7 +84,7 @@ class RunResult:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="YOLO 학습·분할 결과를 report.md에 반영합니다.")
+    parser = argparse.ArgumentParser(description="YOLO 학습·분할 결과를 README.md에 반영합니다.")
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--runs-dir", type=Path, default=DEFAULT_RUNS_DIR)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
@@ -279,7 +279,7 @@ def update_predict_inference_section(
     summary: dict,
     updated_at: str,
 ) -> str:
-    """predict.py Val 일괄 추론 집계·대표 이미지를 report.md에 반영합니다."""
+    """predict.py Val 일괄 추론 집계·대표 이미지를 README.md에 반영합니다."""
     rel_run = to_repo_relative(run_dir)
     lines = [
         f"- **자동 반영:** {updated_at} (`predict.py` → `{run_dir.name}`)",
@@ -906,7 +906,7 @@ def main() -> None:
 
     if split_summary:
         total = split_summary.get("total", {}).get("images", "—")
-        print(f"데이터 분할: 총 {total}장 (report.md 섹션 1 반영)")
+        print(f"데이터 분할: 총 {total}장 (README.md 섹션 1 반영)")
     else:
         print("데이터 분할: split_summary.yaml·data/ 폴더 없음 — 분할 표 미갱신")
 
@@ -924,7 +924,7 @@ def main() -> None:
         print(f"EXP1: {exp1.run_dir} (mAP50={exp1.map50:.3f}, best epoch {exp1.best_epoch})")
 
     if eda_dir:
-        print(f"EDA: {eda_dir} (report.md 섹션 1 EDA 반영)")
+        print(f"EDA: {eda_dir} (README.md 섹션 1 EDA 반영)")
     elif final or split_summary:
         print("EDA: 없음 (python eda.py 실행 후 update_report.py 재실행)")
 
@@ -934,7 +934,7 @@ def main() -> None:
             s = summarize_predict_payload(payload)
             print(
                 f"predict 추론: {predict_run_dir.name} "
-                f"({s['total_images']}장, BBox {s['total_bboxes']}개 — report.md 반영)"
+                f"({s['total_images']}장, BBox {s['total_bboxes']}개 — README.md 반영)"
             )
     else:
         print("predict 추론: 없음 (python predict.py --source data/images/val --name val_batch)")
@@ -949,7 +949,7 @@ def main() -> None:
         return
 
     report_path.write_text(updated, encoding="utf-8")
-    print(f"report.md 갱신 완료: {report_path}")
+    print(f"README.md 갱신 완료: {report_path}")
 
 
 if __name__ == "__main__":

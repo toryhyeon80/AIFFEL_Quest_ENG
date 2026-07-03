@@ -367,7 +367,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="EDA 후 report.md 자동 갱신 건너뛰기",
+        help="EDA 후 README.md 자동 갱신 건너뛰기",
     )
     return parser.parse_args()
 
@@ -404,7 +404,7 @@ def main() -> None:
     print("  - eda_summary.yaml")
 
     if not args.no_report:
-        print("\nreport.md EDA 섹션 갱신 중 (update_report.py)...")
+        print("\nREADME.md EDA 섹션 갱신 중 (update_report.py)...")
         subprocess.run(
             [sys.executable, str(ROOT / "update_report.py")],
             cwd=ROOT,

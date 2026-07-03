@@ -179,7 +179,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="추론 후 report.md 자동 갱신 건너뛰기",
+        help="추론 후 README.md 자동 갱신 건너뛰기",
     )
     return parser.parse_args()
 
@@ -252,7 +252,7 @@ def main() -> None:
         print(f"JSON 저장: {json_path}")
 
     if not args.no_report and save_dir.exists():
-        print("\nreport.md predict 추론 섹션 갱신 중 (update_report.py)...")
+        print("\nREADME.md predict 추론 섹션 갱신 중 (update_report.py)...")
         subprocess.run(
             [sys.executable, str(ROOT / "update_report.py")],
             cwd=ROOT,

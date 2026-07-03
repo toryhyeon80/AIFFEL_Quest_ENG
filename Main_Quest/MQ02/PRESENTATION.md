@@ -3,7 +3,7 @@
 > **용도:** Gamma AI 슬라이드 제작용 · **총 발표 시간 15분** (Live Demo 2분 포함)  
 > **슬라이드:** 18장 + 백업 2장  
 > **구성 기준:** 심사 **IV. 평가 항목** 8가지에 맞춘 증빙·발표 흐름  
-> **상세 근거:** `report.md` · `TRAINING_CHECKLIST.md` · Notion
+> **상세 근거:** `README.md` · `TRAINING_CHECKLIST.md` · Notion
 
 ---
 
@@ -70,7 +70,7 @@
               ↓
 [Phase 3] Streamlit 웹 데모 (Live Demo)
               ↓
-[자동화] report.md · Notion 동기화
+[자동화] README.md · Notion 동기화
 ```
 
 **발표 멘트**
@@ -452,7 +452,7 @@ Swagger: http://localhost:8000/docs
 |:-:|---|---|---|
 | 1 | EDA·전처리 | 13,470장 분할·EDA 3종 시각화·`flipud=0` | `eda.py`, `split_data.py` |
 | 2 | 모델 선정 | YOLO11 채택, n vs s **+3.7%p** 실측 | `train_baseline.yaml`, `train.yaml` |
-| 3 | 논리적 접근 | EDA→Small·증강·배치 튜닝 근거 문서화 | `report.md` §3 |
+| 3 | 논리적 접근 | EDA→Small·증강·배치 튜닝 근거 문서화 | `README.md` §3 |
 | 4 | 여러 시도 | Baseline·EXP1~3·과적합·predict 파이프라인 | `runs/detect/` |
 | 5 | 설득력 있는 결론 | 개선 입증 + FN 866·Test 한계 명시 | `val_final/` |
 | 6 | Metric 분석 | mAP·P/R·혼동행렬·클래스별 분석 | `val_metrics.yaml` |
