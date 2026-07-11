@@ -1,0 +1,12 @@
+# 학습 산출물 (노트북 실행 시 로컬에 생성)
+*.pt
+
+# 증강용 Word2Vec — USE_AUGMENTATION=True 일 때 노트북에서 자동 다운로드
+data/embeddings/
+
+# ChatbotData 원본 저장소 부가 파일 (NLP02.ipynb 미사용)
+data/chatbot/LICENSE
+data/chatbot/README.md
+data/chatbot/*.png
+
+.DS_Store

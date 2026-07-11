@@ -35,9 +35,97 @@
         - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
 
 
-# 회고(참고 링크 및 코드 개선)
+# 회고
+
+## 프로젝트 요약
+
+Ch.17~18 LMS에서 학습한 **Encoder-Decoder Transformer**를 그대로 활용해, 한국어 질문→답변 챗봇을 구현했습니다.  
+`ChatbotData.csv` 약 1.2만 쌍을 전처리·증강한 뒤 학습했고, **Early Stopping(epoch 14 best, 18에서 종료)** 기준 **val loss 4.0238**, **BLEU 0.0532**를 기록했습니다.
+
+---
+
+## 전체 코드 실행 플로우
+
+```mermaid
+flowchart TD
+    A[Step 0: 환경 초기화<br/>device, 상수, 경로] --> B[Step 1: ChatbotData.csv 로드]
+    B --> C[Step 2: preprocess_sentence<br/>정제]
+    C --> D[Step 3: kiwipiepy 형태소 분석<br/>build_corpus + train/val 9:1 분리]
+    D --> E[Step 4: ko.bin Word2Vec 로드<br/>Lexical Substitution 증강 3배]
+    E --> F[Step 5: word2idx 구축<br/>enc/dec 텐서 패딩]
+    F --> G[Transformer 정의<br/>Pre-LN + final_norm]
+    G --> H[마스크 / Noam LR / loss 함수]
+    H --> I[Step 6-A: 모델·DataLoader·AdamW 초기화]
+    I --> J[Step 6-B: 훈련 루프<br/>Early Stopping → best_model.pt]
+    J --> K[Step 6-C: Beam Search 추론<br/>예문 4개 답변 생성]
+    K --> L[Step 7: 검증셋 BLEU 계산]
 ```
-# 리뷰어의 회고를 작성합니다.
-# 코드 리뷰 시 참고한 링크가 있다면 링크와 간략한 설명을 첨부합니다.
-# 코드 리뷰를 통해 개선한 코드가 있다면 코드와 간략한 설명을 첨부합니다.
+
+---
+
+## 배운 점
+
+1. **번역기와 챗봇의 공통점·차이점**  
+   둘 다 Seq2Seq Transformer이지만, 챗봇은 소스·타겟이 **같은 언어(한국어)**라 Embedding을 공유(`fc.weight = emb.weight`)할 수 있고, 데이터 규모가 훨씬 작아 **과적합 방지**가 핵심 과제임을 체감했습니다.
+
+2. **소규모 데이터에서의 정규화 전략**  
+   train/val 분리(10%), train만 3배 증강, dropout(0.2), label smoothing(0.1), AdamW weight decay, Early Stopping을 함께 쓰면 train loss는 계속 내려가도 **val loss 기준 최적 시점**을 잡을 수 있다는 것을 확인했습니다. (epoch 14에서 val loss 최저, 이후 patience 4로 18 epoch에서 종료)
+
+3. **추론 품질과 학습 손실은 별개**  
+   val loss가 안정화되어도 예문 답변이 항상 자연스럽지는 않았습니다. **Beam Search(beam=5) + length penalty**가 greedy보다 나은 경우가 있지만, BLEU(0.0532)만으로 대화 품질을 충분히 설명하기는 어렵다는 점을 배웠습니다.
+
+4. **환경 이슈 대응**  
+   Mac에서는 MeCab 대신 **kiwipiepy**로 형태소 분석을 대체했고, 2016년 `ko.bin`은 gensim 4.x와 호환되지 않아 `utils.unpickle` → `KeyedVectors` 재조립 방식으로 로드해야 했습니다. 실무에서도 **라이브러리 버전·구형 모델 포맷**을 먼저 확인해야 함을 느꼈습니다.
+
+---
+
+## 아쉬운 점
+
+1. **예문 4개 답변 품질**  
+   LMS 예시 제출 답변(「잠깐 쉬어도 돼요」 등)에 비해, 현재 결과(「같이 가세요」, 「후회할 거예요」 등)는 질문 의도와 맞지 않는 경우가 있어 **하이퍼파라미터·epoch만으로는 한계**가 있음을 느꼈습니다.
+
+2. **BLEU 점수**  
+   검증셋 BLEU 0.0532는 형태소 단위 평가 특성상 낮게 나오기 쉬우며, 의미적으로 맞는 답이라도 표현이 다르면 점수가 잘 오르지 않습니다. **사람이 읽는 품질**과 수치 평가의 괴리가 컸습니다.
+
+3. **BLEU 평가 시간**  
+   Beam Search를 검증셋 762건 전체에 적용하니 약 21분이 소요되었습니다. 추론 배치화나 greedy 옵션 분리 등 **평가 파이프라인 최적화** 여지가 있습니다.
+
+4. **증강 방식**  
+   Word2Vec `most_similar` 1단어 치환만 사용했습니다. 문맥을 고려하지 않아 부자연스러운 쌍이 섞일 수 있어, **역번역·back-translation** 등 다른 증강도 시도해 볼 만합니다.
+
+---
+
+## 느낀 점
+
+Ch.17 스페인어→영어 번역기를 만들 때는 데이터가 커서 “학습이 잘 되는지”에 집중했다면, 이번 챗봇 프로젝트에서는 **데이터가 작을 때 모델이 외우지 않게 하는 설계**가 더 중요하다는 것을 다시 깨달았습니다. epoch를 무작정 늘리는 것보다 **val 기준 best model 저장**이 실제 제출 품질에 더 직결됩니다.
+
+또한 LMS 노트북을 Mac(MPS) 환경에 맞게 수정하고, 제출용 `NLP02.ipynb`로 정리하는 과정에서 **학습 코드 → 재현 가능한 파이프라인**으로 옮기는 작업 자체가 큰 학습이었습니다.
+
+---
+
+## 참고 링크
+
+| 링크 | 설명 |
+|------|------|
+| [songys/Chatbot_data](https://github.com/songys/Chatbot_data) | 한국어 챗봇 Q&A 원본 데이터 |
+| [Kyubyong/wordvectors (ko.bin)](https://github.com/Kyubyong/wordvectors) | 증강용 한국어 Word2Vec 사전 |
+| [kiwipiepy](https://github.com/bab2min/kiwipiepy) | Mac 호환 한국어 형태소 분석 (MeCab 대체) |
+| [Attention Is All You Need](https://arxiv.org/abs/1706.03762) | Transformer·Noam LR 스케줄러 원 논문 |
+
+---
+
+## 디버깅·개선 기록 (참고)
+
+**문제:** Step 4에서 `Word2Vec.load(ko.bin)` 실행 시 `AttributeError: 'Word2Vec' object has no attribute 'wv'`  
+**원인:** `ko.bin`이 gensim 2.x(2016) 포맷인데, 환경은 gensim 4.3.3  
+**해결:** `gensim.utils.unpickle`로 구형 모델을 읽은 뒤 `syn0` + `index2word`를 `KeyedVectors`로 재조립
+
+```python
+def load_ko_wv(path):
+    model = utils.unpickle(str(path))
+    if hasattr(model, "wv"):
+        return model.wv
+    kv = KeyedVectors(vector_size=model.syn0.shape[1])
+    kv.add_vectors(model.index2word, model.syn0)
+    return kv
 ```
