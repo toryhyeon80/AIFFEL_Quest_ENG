@@ -1,0 +1,12 @@
+# Large model weights (GitHub 100MB limit)
+data/**/*.pt
+*.pt
+
+# Intermediate execute dumps (optional local artifacts)
+MQ03_executed.ipynb
+MQ03_trained.ipynb
+
+# Python / OS
+__pycache__/
+.DS_Store
+.ipynb_checkpoints/
