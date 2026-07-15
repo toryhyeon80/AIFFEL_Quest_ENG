@@ -1,0 +1,6 @@
+# Large Colab artifacts (keep local / Drive only)
+data/
+models/
+*.pt
+*.memmap
+.DS_Store
