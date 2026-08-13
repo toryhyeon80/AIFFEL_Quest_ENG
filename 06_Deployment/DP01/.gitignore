@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+# MNIST raw download (재다운로드 가능)
+data/MNIST/
