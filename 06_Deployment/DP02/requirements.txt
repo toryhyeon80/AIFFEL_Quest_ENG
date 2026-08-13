@@ -1,0 +1,16 @@
+# ===== Core =====
+torch>=2.1.0,<2.5.0
+torchvision>=0.16.0,<0.20.0
+
+# ===== API =====
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic>=2.0.0,<3.0.0
+
+# ===== Frontend (DP02 Day 2에서는 불필요, 디스크 여유 생기면 설치) =====
+# streamlit==1.38.0
+
+# ===== Utilities =====
+requests>=2.31.0,<3.0.0
+pillow>=10.0.0
+python-multipart>=0.0.6
