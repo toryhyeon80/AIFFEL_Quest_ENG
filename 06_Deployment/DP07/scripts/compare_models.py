@@ -63,7 +63,11 @@ def pick_device() -> str:
     return "cpu"
 
 
-def generate(model, tokenizer, device: str, messages: list[dict], max_new_tokens: int = 80) -> str:
+def input_device_of(model) -> torch.device:
+    return next(model.parameters()).device
+
+
+def generate(model, tokenizer, messages: list[dict], max_new_tokens: int = 80) -> str:
     chat = [
         {
             "role": "system",
@@ -81,7 +85,7 @@ def generate(model, tokenizer, device: str, messages: list[dict], max_new_tokens
     )
     if not torch.is_tensor(encoded):
         encoded = encoded["input_ids"]
-    input_ids = encoded.to(device)
+    input_ids = encoded.to(input_device_of(model))
 
     with torch.no_grad():
         out = model.generate(
@@ -102,17 +106,28 @@ def run_one(size: str, device: str) -> list[dict]:
     t0 = time.time()
     tokenizer = AutoTokenizer.from_pretrained(name)
     dtype = torch.float16 if device in ("cuda", "mps") else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=dtype)
-    model = model.to(device)
+
+    # Colab/CUDA: device_map="auto"로 바로 GPU에 올려 CPU→GPU 이중 적재를 피합니다.
+    # (기존 from_pretrained + .to(cuda)는 로드 중 OOM/강제 종료가 나기 쉽습니다.)
+    load_kwargs = {
+        "torch_dtype": dtype,
+        "low_cpu_mem_usage": True,
+    }
+    if device == "cuda":
+        load_kwargs["device_map"] = "auto"
+        model = AutoModelForCausalLM.from_pretrained(name, **load_kwargs)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(name, **load_kwargs)
+        model = model.to(device)
     model.eval()
     load_s = round(time.time() - t0, 1)
-    print(f"loaded in {load_s}s", flush=True)
+    print(f"loaded in {load_s}s (param device={input_device_of(model)})", flush=True)
 
     rows = []
     for p in PROMPTS:
         t1 = time.time()
         try:
-            resp = generate(model, tokenizer, device, p["messages"])
+            resp = generate(model, tokenizer, p["messages"])
             elapsed = round(time.time() - t1, 1)
             status = "ok"
         except Exception as e:  # noqa: BLE001
@@ -132,7 +147,6 @@ def run_one(size: str, device: str) -> list[dict]:
             }
         )
 
-    # free memory before next model
     del model
     if device == "mps":
         torch.mps.empty_cache()
@@ -194,6 +208,13 @@ def main() -> None:
         choices=list(MODEL_MAP),
         help="Compare these sizes in order (default: 0.5B 1.5B)",
     )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="Output markdown path (default: assets/model_compare_results.md; "
+        "7B-only runs write assets/model_compare_7B_colab.md)",
+    )
     args = parser.parse_args()
     device = pick_device()
     print(f"device={device}, models={args.models}", flush=True)
@@ -216,9 +237,16 @@ def main() -> None:
                 }
             )
 
-    OUT.parent.mkdir(exist_ok=True)
-    OUT.write_text(to_markdown(all_rows, device), encoding="utf-8")
-    print(f"\nWrote {OUT}", flush=True)
+    out = args.out
+    if out is None:
+        if args.models == ["7B"]:
+            out = ROOT / "assets" / "model_compare_7B_colab.md"
+        else:
+            out = OUT
+    out = out if out.is_absolute() else ROOT / out
+    out.parent.mkdir(exist_ok=True)
+    out.write_text(to_markdown(all_rows, device), encoding="utf-8")
+    print(f"\nWrote {out}", flush=True)
 
 
 if __name__ == "__main__":
