@@ -24,6 +24,11 @@ class ChatRequest(BaseModel):
         default=True,
         description="야외 키워드 감지 시 1회 재생성",
     )
+    use_rag: bool = Field(
+        default=True,
+        description="places.json 미니 RAG로 top-k 장소를 프롬프트에 주입",
+    )
+    rag_top_k: int = Field(default=5, ge=1, le=10)
 
     model_config = {
         "json_schema_extra": {
@@ -57,3 +62,4 @@ class ChatResponse(BaseModel):
     suspicious_hits: list[str] = Field(default_factory=list)
     place_hits: list[str] = Field(default_factory=list)
     excluded_places: list[str] = Field(default_factory=list)
+    rag_hits: list[str] = Field(default_factory=list)

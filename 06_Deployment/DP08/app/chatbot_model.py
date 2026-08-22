@@ -20,6 +20,7 @@ from app.guardrails import (
     known_place_hits,
     previously_recommended_places,
 )
+from app.rag import retrieve, format_rag_context, rag_enabled
 
 
 MODEL_CHOICES = {
@@ -76,8 +77,14 @@ class IndoorChatbotModel:
             encoded = encoded["input_ids"]
         return encoded.to(self.device)
 
-    def _build_chat(self, messages: list[dict]) -> list[dict]:
+    def _build_chat(
+        self,
+        messages: list[dict],
+        rag_places: list[dict] | None = None,
+    ) -> list[dict]:
         system_content = SYSTEM_PROMPT
+        if rag_places:
+            system_content += "\n\n" + format_rag_context(rag_places)
         # 이전 턴에서 이미 추천한 장소는 시스템 프롬프트에 제외 목록으로 붙입니다.
         excluded = previously_recommended_places(messages)
         if excluded:
@@ -131,14 +138,26 @@ class IndoorChatbotModel:
         top_k: int = 50,
         top_p: float = 0.9,
         strict_indoor: bool = True,
+        use_rag: bool = True,
+        rag_top_k: int = 5,
     ) -> dict:
         """
         Returns:
             response, retried, retry_reasons, outdoor_hits, suspicious_hits,
-            place_hits, excluded_places
+            place_hits, excluded_places, rag_hits
         """
         excluded = previously_recommended_places(messages)
-        chat = self._build_chat(messages)
+        last_user = ""
+        for msg in reversed(messages):
+            if msg.get("role") == "user":
+                last_user = msg.get("content", "")
+                break
+
+        rag_places: list[dict] = []
+        if use_rag and rag_enabled() and last_user:
+            rag_places = retrieve(last_user, top_k=rag_top_k)
+
+        chat = self._build_chat(messages, rag_places=rag_places)
         response = self._generate_once(
             chat, max_new_tokens, temperature, top_k, top_p
         )
@@ -166,6 +185,9 @@ class IndoorChatbotModel:
             if excluded:
                 short = ", ".join(p.split("(")[0].strip() for p in excluded[:5])
                 retry_msg += f" 이미 추천한 장소({short})는 제외하세요."
+            if rag_places:
+                names = ", ".join(p.get("name", "") for p in rag_places[:5])
+                retry_msg += f" 가능하면 검색 컨텍스트({names})를 우선하세요."
 
             retry_chat = chat + [
                 {"role": "assistant", "content": response},
@@ -184,4 +206,5 @@ class IndoorChatbotModel:
             "suspicious_hits": suspicious_hits(response),
             "place_hits": known_place_hits(response),
             "excluded_places": excluded,
+            "rag_hits": [p.get("name", "") for p in rag_places],
         }

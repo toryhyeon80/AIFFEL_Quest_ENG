@@ -56,6 +56,8 @@ def run_chat(
     max_new_tokens,
     temperature,
     strict_indoor,
+    use_rag,
+    rag_top_k,
 ):
     if chatbot is None:
         raise RuntimeError("모델이 로드되지 않았습니다")
@@ -64,6 +66,8 @@ def run_chat(
         max_new_tokens=max_new_tokens,
         temperature=temperature,
         strict_indoor=strict_indoor,
+        use_rag=use_rag,
+        rag_top_k=rag_top_k,
     )
 
 
@@ -118,7 +122,8 @@ async def chat(
 
     logger.info(
         f"채팅 요청 — 사용자: {user}, 메시지 수: {len(request.messages)}, "
-        f"model={request.model_key}, strict={request.strict_indoor}"
+        f"model={request.model_key}, strict={request.strict_indoor}, "
+        f"rag={request.use_rag}"
     )
 
     try:
@@ -130,6 +135,8 @@ async def chat(
             request.max_new_tokens,
             request.temperature,
             request.strict_indoor,
+            request.use_rag,
+            request.rag_top_k,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"텍스트 생성 실패: {str(e)}") from e
@@ -146,4 +153,5 @@ async def chat(
         suspicious_hits=result.get("suspicious_hits", []),
         place_hits=result.get("place_hits", []),
         excluded_places=result.get("excluded_places", []),
+        rag_hits=result.get("rag_hits", []),
     )

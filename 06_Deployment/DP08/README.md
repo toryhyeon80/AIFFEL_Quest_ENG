@@ -25,7 +25,9 @@ streamlit run frontend/app_chatbot.py --server.port 8501
 | 파일 | 역할 |
 |------|------|
 | `app/prompts.py` | 실내 전용 system prompt |
+| `app/rag.py` | 미니 RAG (`places.json` top-k) |
 | `app/guardrails.py` | 야외 키워드 휴리스틱 |
+| `data/places.json` | 장소 메타 DB |
 | `app/chatbot_model.py` | 생성 + 필요 시 1회 재생성 |
 | `app/chatbot_api.py` | FastAPI + 모델 교체 로드 |
 | `frontend/app_chatbot.py` | Streamlit UI |
