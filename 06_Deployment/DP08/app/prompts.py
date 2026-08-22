@@ -1,45 +1,30 @@
 """
 서울 실내 추천 특화 시스템 프롬프트 + 검증된 장소 목록.
+PLACE_BANK는 data/places.json에서 자동 동기화합니다.
 """
+from __future__ import annotations
 
-# 모델이 우선 고르도록 넣는 실제 실내 장소/공간 (환각 완화용 소규모 뱅크)
-# 상호를 말할 때는 이 목록에서만 고르도록 system prompt에 주입합니다.
-PLACE_BANK: list[str] = [
-    # 박물관·미술관
-    "국립중앙박물관",
-    "국립현대미술관 서울",
-    "서울시립미술관",
-    "리움미술관",
-    "대림미술관",
-    "국립한글박물관",
-    "서울역사박물관",
-    "전쟁기념관",
-    "국립민속박물관",
-    "디뮤지엄",
-    "트릭아이미술관",
-    # 문화·공연·체험
-    "DDP(동대문디자인플라자) 실내 전시",
-    "서울애니메이션센터",
-    "국립극장",
-    "예술의전당",
-    "블루스퀘어",
-    "코엑스 아쿠아리움",
-    "롯데월드 어드벤처",
-    # 쇼핑·도서관·복합
-    "코엑스몰",
-    "더현대 서울",
-    "IFC몰",
-    "타임스퀘어",
-    "별마당도서관",
-    "서울도서관",
-    "정독도서관",
-    "교보문고 광화문",
-    "인사동 쌈지길",
-    # 영화·휴식 (브랜드/카테고리)
-    "CGV·메가박스·롯데시네마 등 영화관",
-    "대형 찜질방·스파(실내)",
-    "성수·연남·한남 일대 실내 카페",
-]
+import json
+from pathlib import Path
+
+_PLACES_PATH = Path(__file__).resolve().parents[1] / "data" / "places.json"
+
+
+def _load_place_bank() -> list[str]:
+    data = json.loads(_PLACES_PATH.read_text(encoding="utf-8"))
+    names = [p["name"] for p in data if p.get("name")]
+    # 순서 유지 중복 제거
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for n in names:
+        if n not in seen:
+            seen.add(n)
+            ordered.append(n)
+    return ordered
+
+
+# 모델이 우선 고르도록 넣는 실제 실내 장소/공간 (환각 완화용)
+PLACE_BANK: list[str] = _load_place_bank()
 
 # 자주 나오는 모호/가짜 상호 패턴 → 재생성 유도
 SUSPICIOUS_FAKE_PATTERNS = [
