@@ -63,3 +63,7 @@ class ChatResponse(BaseModel):
     place_hits: list[str] = Field(default_factory=list)
     excluded_places: list[str] = Field(default_factory=list)
     rag_hits: list[str] = Field(default_factory=list)
+    rag_backend: Optional[str] = Field(
+        default=None,
+        description="검색 백엔드: embedding 또는 keyword",
+    )

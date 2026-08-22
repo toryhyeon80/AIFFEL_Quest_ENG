@@ -154,4 +154,5 @@ async def chat(
         place_hits=result.get("place_hits", []),
         excluded_places=result.get("excluded_places", []),
         rag_hits=result.get("rag_hits", []),
+        rag_backend=result.get("rag_backend"),
     )

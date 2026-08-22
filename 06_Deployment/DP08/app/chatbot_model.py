@@ -20,7 +20,7 @@ from app.guardrails import (
     known_place_hits,
     previously_recommended_places,
 )
-from app.rag import retrieve, format_rag_context, rag_enabled
+from app.rag import retrieve, format_rag_context, rag_enabled, last_retrieve_backend
 
 
 MODEL_CHOICES = {
@@ -207,4 +207,5 @@ class IndoorChatbotModel:
             "place_hits": known_place_hits(response),
             "excluded_places": excluded,
             "rag_hits": [p.get("name", "") for p in rag_places],
+            "rag_backend": last_retrieve_backend() if rag_places else None,
         }

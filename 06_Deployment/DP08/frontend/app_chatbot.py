@@ -109,7 +109,8 @@ def format_meta_caption(meta: dict) -> str:
         bits.append("제외: " + ", ".join(short))
     if meta.get("rag_hits"):
         short = [p.split("(")[0].strip() for p in meta["rag_hits"][:3]]
-        bits.append("RAG: " + ", ".join(short))
+        backend = meta.get("rag_backend") or "rag"
+        bits.append(f"RAG({backend}): " + ", ".join(short))
     if meta.get("model_key"):
         bits.append(f"model={meta['model_key']}")
     return " · ".join(bits)
@@ -144,7 +145,7 @@ with st.sidebar:
     st.caption(f"현재 temperature = {temperature}")
     max_tokens = st.slider("최대 생성 토큰", 40, 300, 140, step=10)
     strict_indoor = st.checkbox("실내 가드레일 (야외 감지 시 1회 재생성)", value=True)
-    use_rag = st.checkbox("미니 RAG (places.json top-k 주입)", value=True)
+    use_rag = st.checkbox("미니 RAG (임베딩 top-k 주입)", value=True)
 
     st.divider()
     # /health로 연결 확인 + session에 로드 모델 동기화
@@ -238,6 +239,7 @@ if user_input:
                 "place_hits": result.get("place_hits", []),
                 "excluded_places": result.get("excluded_places", []),
                 "rag_hits": result.get("rag_hits", []),
+                "rag_backend": result.get("rag_backend"),
                 "model_key": result.get("model_key"),
             }
             # 채팅 직후 사이드바「로드됨」이 실제 사용 모델과 맞도록 동기화
