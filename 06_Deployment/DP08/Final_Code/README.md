@@ -228,33 +228,7 @@ PYTHONPATH=. python scripts/compare_indoor_colab.py --models 7B
 
 ---
 
-## 6. 체크리스트
-
-### 노트북 평가 기준 (baseline)
-
-- [x] 서버 정상 실행 (`uvicorn app.main:app`)
-- [x] Swagger UI에서 `/predict` 동작
-- [x] API Key 없으면 401
-- [x] 잘못된 입력 422
-- [x] Streamlit 입력 → 결과 확인
-
-### Indoor 확장
-
-- [x] `/health`, `/predict`, `/chat` 동작
-- [x] RAG·가드레일·캡처 보존 (`indoor/assets/`)
-- [x] 노트북 뼈대 이름 정렬 (`main.py`, `schemas.py`, `model_service.py`)
-
-### 제출
-
-- [x] LMS 요구사항 반영 (캡처·Q1~Q5·회고)
-- [x] 실행 캡처 최신화 (`assets/`, `indoor/assets/` — 2026-08-24)
-- [x] GitHub 푸시 + LMS 제출 링크 기록
-
-**GitHub 제출 링크:** https://github.com/toryhyeon80/AIFFEL_Quest_ENG/blob/main/06_Deployment/DP08/Final_Code/README.md
-
----
-
-## 7. 파일 맵
+## 6. 파일 맵
 
 | Baseline (루트) | Indoor 확장 |
 |-----------------|-------------|
