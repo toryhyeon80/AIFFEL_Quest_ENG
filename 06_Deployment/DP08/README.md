@@ -1,55 +1,43 @@
-# DP08 — 자율 프로젝트 (노트북 baseline + indoor 확장)
+# AIFFEL Campus Online Code Peer Review Templete
+- 코더 : 코더의 이름을 작성하세요.
+- 리뷰어 : 리뷰어의 이름을 작성하세요.
 
-공식 [`DP08.ipynb`](./DP08.ipynb) 기준으로 **두 트랙**으로 구성했습니다.
 
-| 트랙 | 설명 | 경로 |
-|------|------|------|
-| **Baseline (LMS 제출·데모)** | 한국어 감정 분석 `snunlp/KR-FinBert-SC`, `POST /predict` | 루트 `app/`, `frontend/app.py` |
-| **Indoor 확장** | 서울 실내 추천 Qwen + RAG + 가드레일 | [`indoor/`](./indoor/) |
+# PRT(Peer Review Template)
+- [ ]  **1. 주어진 문제를 해결하는 완성된 코드가 제출되었나요?**
+    - 문제에서 요구하는 최종 결과물이 첨부되었는지 확인
+        - 중요! 해당 조건을 만족하는 부분을 캡쳐해 근거로 첨부
+    
+- [ ]  **2. 전체 코드에서 가장 핵심적이거나 가장 복잡하고 이해하기 어려운 부분에 작성된 
+주석 또는 doc string을 보고 해당 코드가 잘 이해되었나요?**
+    - 해당 코드 블럭을 왜 핵심적이라고 생각하는지 확인
+    - 해당 코드 블럭에 doc string/annotation이 달려 있는지 확인
+    - 해당 코드의 기능, 존재 이유, 작동 원리 등을 기술했는지 확인
+    - 주석을 보고 코드 이해가 잘 되었는지 확인
+        - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
+        
+- [ ]  **3. 에러가 난 부분을 디버깅하여 문제를 해결한 기록을 남겼거나
+새로운 시도 또는 추가 실험을 수행해봤나요?**
+    - 문제 원인 및 해결 과정을 잘 기록하였는지 확인
+    - 프로젝트 평가 기준에 더해 추가적으로 수행한 나만의 시도, 
+    실험이 기록되어 있는지 확인
+        - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
+        
+- [ ]  **4. 회고를 잘 작성했나요?**
+    - 주어진 문제를 해결하는 완성된 코드 내지 프로젝트 결과물에 대해
+    배운점과 아쉬운점, 느낀점 등이 기록되어 있는지 확인
+    - 전체 코드 실행 플로우를 그래프로 그려서 이해를 돕고 있는지 확인
+        - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
+        
+- [ ]  **5. 코드가 간결하고 효율적인가요?**
+    - 파이썬 스타일 가이드 (PEP8) 를 준수하였는지 확인
+    - 코드 중복을 최소화하고 범용적으로 사용할 수 있도록 함수화/모듈화했는지 확인
+        - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
 
-제출 문서: [`Final_Code/DP08.md`](./Final_Code/DP08.md)
 
-## 1. Pipeline baseline (포트 8000)
-
-```bash
-cd 06_Deployment/DP08
-source ../DP07/.venv/bin/activate   # 또는 python3 -m venv .venv
-pip install -r requirements.txt
-
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-# 다른 터미널
-streamlit run frontend/app.py --server.port 8501
+# 회고(참고 링크 및 코드 개선)
 ```
-
-- API Key: `test-key-001`
-- Swagger: http://localhost:8000/docs
-- `POST /predict` — `{ "text": "..." }` → `{ "label", "score", "success" }`
-
-## 2. Indoor chatbot 확장 (포트 8001)
-
-```bash
-cd 06_Deployment/DP08/indoor
-pip install -r requirements.txt
-
-uvicorn app.main:app --host 0.0.0.0 --port 8001
-# 다른 터미널
-streamlit run frontend/app.py --server.port 8502
+# 리뷰어의 회고를 작성합니다.
+# 코드 리뷰 시 참고한 링크가 있다면 링크와 간략한 설명을 첨부합니다.
+# 코드 리뷰를 통해 개선한 코드가 있다면 코드와 간략한 설명을 첨부합니다.
 ```
-
-- `POST /predict` — 단일 질문 실내 추천
-- `POST /chat` — 멀티턴 + RAG + 가드레일
-- 테스트: `PYTHONPATH=. python scripts/test_rag.py`
-
-## 노트북 연동 (Mac)
-
-[`DP08.ipynb`](./DP08.ipynb) 은 **교안 + 데모** 용도입니다. baseline 코드는 이미 구현되어 있어 **전체 실행은 필수 아님** (제출은 [`Final_Code/DP08.md`](./Final_Code/DP08.md)).
-
-Mac에서 노트북으로 데모할 때:
-1. 커널: `../DP07/.venv` 선택
-2. 서버 도우미 셀 → 섹션 4.2 서버 실행 → 4.3 API 테스트
-
-터미널만 써도 됩니다: `uvicorn app.main:app --port 8000`
-
-## Peer review
-
-`Contents/README.md`, `Final_Code/README.md` 참고.
