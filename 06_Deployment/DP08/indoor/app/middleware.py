@@ -4,7 +4,7 @@ import logging
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-logger = logging.getLogger("dp08_pipeline")
+logger = logging.getLogger("indoor_chatbot")
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):

@@ -50,6 +50,16 @@ class ChatRequest(BaseModel):
     }
 
 
+class PredictRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=2000, description="실내 추천 질문")
+    max_new_tokens: int = Field(default=140, ge=10, le=500)
+    temperature: float = Field(default=0.3, gt=0.0, le=2.0)
+    model_key: Literal["1.5B", "3B"] = Field(default="3B")
+    strict_indoor: bool = Field(default=True)
+    use_rag: bool = Field(default=True)
+    rag_top_k: int = Field(default=5, ge=1, le=10)
+
+
 class ChatResponse(BaseModel):
     success: bool
     response: str
@@ -67,3 +77,7 @@ class ChatResponse(BaseModel):
         default=None,
         description="검색 백엔드: embedding 또는 keyword",
     )
+
+
+class PredictResponse(ChatResponse):
+    """POST /predict 응답 — ChatResponse와 동일 필드."""

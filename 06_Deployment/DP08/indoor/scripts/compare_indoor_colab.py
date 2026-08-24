@@ -7,11 +7,12 @@ DP08의 SYSTEM_PROMPT + 가드레일(야외/환각 1회 재생성)을 그대로 
 Colab:
   %cd /content/AIFFEL_Quest_ENG
   !git pull origin main
-  %cd 06_Deployment/DP08
-  !pip install -q transformers accelerate torch sentencepiece
+  %cd 06_Deployment/DP08/indoor
+  !pip install -q transformers accelerate torch sentencepiece sentence-transformers
   !python scripts/compare_indoor_colab.py --models 7B
 
 Mac (3B까지 권장):
+  cd 06_Deployment/DP08/indoor
   PYTHONPATH=. python scripts/compare_indoor_colab.py --models 3B
 """
 

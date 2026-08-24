@@ -31,7 +31,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-API_BASE = "http://localhost:8000"
+API_BASE = "http://localhost:8001"
 
 EXAMPLE_PROMPTS = [
     "주말에 서울에서 실내 데이트 코스 2개만 추천해줘",
@@ -67,7 +67,7 @@ def call_chat_api(
         resp.raise_for_status()
         return resp.json()
     except requests.exceptions.ConnectionError:
-        st.error("🔌 **서버에 연결할 수 없습니다.** `uvicorn app.chatbot_api:app` 를 확인하세요.")
+        st.error("🔌 **서버에 연결할 수 없습니다.** `uvicorn app.main:app --port 8001` 를 확인하세요.")
         return None
     except requests.exceptions.HTTPError as e:
         if e.response is not None and e.response.status_code == 401:

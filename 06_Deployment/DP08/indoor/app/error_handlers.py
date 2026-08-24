@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-logger = logging.getLogger("dp08_pipeline")
+logger = logging.getLogger("indoor_chatbot")
 
 
 def register_error_handlers(app: FastAPI):

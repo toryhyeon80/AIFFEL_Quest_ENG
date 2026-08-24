@@ -3,7 +3,7 @@ import logging
 import sys
 
 
-def setup_logger(name: str = "dp08_pipeline", level: str = "INFO") -> logging.Logger:
+def setup_logger(name: str = "indoor_chatbot", level: str = "INFO") -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(getattr(logging, level))
 
