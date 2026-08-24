@@ -7,7 +7,7 @@
 | **Baseline (LMS 제출·데모)** | 한국어 감정 분석 `snunlp/KR-FinBert-SC`, `POST /predict` | 루트 `app/`, `frontend/app.py` |
 | **Indoor 확장** | 서울 실내 추천 Qwen + RAG + 가드레일 | [`indoor/`](./indoor/) |
 
-제출 문서: [`DP08.md`](./DP08.md)
+제출 문서: [`Final_Code/DP08.md`](./Final_Code/DP08.md)
 
 ## 1. Pipeline baseline (포트 8000)
 
@@ -42,7 +42,7 @@ streamlit run frontend/app.py --server.port 8502
 
 ## 노트북 연동 (Mac)
 
-[`DP08.ipynb`](./DP08.ipynb) 은 **교안 + 데모** 용도입니다. baseline 코드는 이미 구현되어 있어 **전체 실행은 필수 아님** (제출은 [`DP08.md`](./DP08.md)).
+[`DP08.ipynb`](./DP08.ipynb) 은 **교안 + 데모** 용도입니다. baseline 코드는 이미 구현되어 있어 **전체 실행은 필수 아님** (제출은 [`Final_Code/DP08.md`](./Final_Code/DP08.md)).
 
 Mac에서 노트북으로 데모할 때:
 1. 커널: `../DP07/.venv` 선택
